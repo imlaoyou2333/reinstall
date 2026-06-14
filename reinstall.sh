@@ -108,6 +108,7 @@ Usage: $reinstall_____ anolis      7|8|23
                        [--ssh-key     KEY]
                        [--ssh-port    PORT]
                        [--web-port    PORT]
+                       [--btrfs]      Enable Debian btrfs subvolume install
                        [--frpc-config PATH]
 
                        For Windows Only:
@@ -3248,7 +3249,7 @@ build_extra_cmdline() {
     # https://salsa.debian.org/installer-team/rootskel/-/blob/master/src/lib/debian-installer-startup.d/S02module-params?ref_type=heads
     for key in confhome hold force_boot_mode force_cn force_old_windows_setup cloud_image main_disk \
         elts deb_mirror \
-        username ssh_port rdp_port web_port allow_ping; do
+        username ssh_port rdp_port web_port allow_ping btrfs; do
         value=${!key}
         if [ -n "$value" ]; then
             is_need_quote "$value" &&
@@ -4473,6 +4474,7 @@ for o in ci installer debug minimal allow-ping force-cn help \
     rdp-port: \
     web-port: http-port: \
     allow-ping: \
+    btrfs \
     commit: \
     frpc-conf: frpc-config: \
     target-disk: \
@@ -4732,6 +4734,10 @@ EOF
         fi
 
         shift 2
+        ;;
+    --btrfs)
+        btrfs=1
+        shift
         ;;
     --force-old-windows-setup)
         force_old_windows_setup=$2
